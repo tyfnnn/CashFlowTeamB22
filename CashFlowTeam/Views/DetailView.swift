@@ -20,28 +20,27 @@ struct DetailView: View {
     var body: some View {
         NavigationStack {
             List {
-                VStack {
-                    if budget.ausgaben.isEmpty {
-                        Text("Keine Einträge vorhanden")
-                    } else {
-                        ForEach(budget.ausgaben) { ausgabe in
-                            NavigationLink(destination: EditAusgabeView(ausgabe: ausgabe)) {
-                                HStack {
-                                    Text(ausgabe.name)
-                                    Spacer()
-                                    Text("\(ausgabe.amount, specifier: "%.2f") €")
-                                }
+                if budget.ausgaben.isEmpty {
+                    Text("Keine Einträge vorhanden")
+                } else {
+                    ForEach(budget.ausgaben) { ausgabe in
+                        NavigationLink(destination: EditAusgabeView(ausgabe: ausgabe)) {
+                            HStack {
+                                Text(ausgabe.name)
+                                Spacer()
+                                Text("\(ausgabe.amount, specifier: "%.2f") €")
                             }
                         }
                     }
-                }
-                .swipeActions {
-                    Button("Delete", role: .destructive) {
-                        context.delete(budget)
+                    .swipeActions {
+                        Button("Delete", role: .destructive) {
+                            context.delete(budget)
+                        }
                     }
+                    
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
             }
             Spacer()
             .overlay{

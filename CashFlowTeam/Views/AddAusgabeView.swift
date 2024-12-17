@@ -30,8 +30,8 @@ struct AddAusgabeView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
-                        if let amountValue = Double(amount),
-                           !name.isEmpty {
+                        if
+                            !name.isEmpty && !amount.isEmpty {
                             saveAusgabe()
                             dismiss()
                         } else {
