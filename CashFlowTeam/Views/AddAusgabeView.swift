@@ -15,7 +15,8 @@ struct AddAusgabeView: View {
     
     @State private var name: String = ""
     @State private var amount: String = ""
-   
+    @State private var showingAlert: Bool = false
+    
     
     var body: some View {
         NavigationStack {
@@ -29,27 +30,37 @@ struct AddAusgabeView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
-                        saveAusgabe()
-                        dismiss()
+                        if let amountValue = Double(amount),
+                           !name.isEmpty {
+                            saveAusgabe()
+                            dismiss()
+                        } else {
+                            showingAlert = true
+                        }
                     }
                 }
-            
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Abbrechen") {
                         dismiss()
                     }
                 }
             }
+            .alert("Ungültige Eingabe",
+                   isPresented: $showingAlert) {
+                Button("OK") { }
+            } message: {
+                Text("Bitte geben Sie einen gültigen Namen und/oder Betrag ein.")
+            }
         }
     }
-    
     private func saveAusgabe() {
         guard let amountValue = Double(amount) else { return }
         let neueAusgabe = Ausgabe(amount: amountValue, budget: budget, name: name, date: Date())
-            modelContext.insert(neueAusgabe)
-            budget.ausgaben.append(neueAusgabe)
-        }
+        modelContext.insert(neueAusgabe)
+        budget.ausgaben.append(neueAusgabe)
+    }
 }
+
 
 #Preview {
     AddAusgabeView(budget: Budget(name: "Lebensmittel", limit: 300))

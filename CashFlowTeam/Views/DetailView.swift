@@ -35,6 +35,11 @@ struct DetailView: View {
                         }
                     }
                 }
+                .swipeActions {
+                    Button("Delete", role: .destructive) {
+                        context.delete(budget)
+                    }
+                }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             }
@@ -53,16 +58,9 @@ struct DetailView: View {
                         .shadow(radius: 5)
                 }
             }
-            .onAppear{
-                context.insert(Ausgabe.sample)
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showEditSheet = true }) {
-                    Text("Bearbeiten")
-                }
-            }
+//            .onAppear{
+//                context.insert(Ausgabe.sample)
+//            }
         }
         .navigationTitle(budget.name)
         .sheet(isPresented: $showAddAusgabeSheet) {

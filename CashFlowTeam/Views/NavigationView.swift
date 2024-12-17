@@ -16,7 +16,7 @@ struct NavigationView: View {
                 Label ("Budget", systemImage: "eurosign")
             }
             Tab {
-                //DetailView()
+                AlleAusgabenView()
             } label: {
                 Label ("Ausgaben", systemImage: "minus.circle")
             }

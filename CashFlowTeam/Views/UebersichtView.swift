@@ -35,6 +35,7 @@ struct UebersichtView: View {
                 List(budgets) { budget in
                     NavigationLink(destination: DetailView(budget: budget)) {
                         VStack(alignment: .leading, spacing: 8) {
+                            
                             Text(budget.name)
                                 .font(.headline)
                             
@@ -46,21 +47,27 @@ struct UebersichtView: View {
                             }
                         }
                     }
-                }
-            }
-            .navigationTitle("Budgets")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showSheet = true }) {
-                        Image(systemName: "plus")
+                    .swipeActions {
+                        Button("Delete", role: .destructive) {
+                            context.delete(budget)
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $showSheet) {
-                AddBudgetView()
-            }
-            .onAppear{
-                context.insert(Budget.budgetSample)
+                
+                .navigationTitle("Budgets")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: { showSheet = true }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                .sheet(isPresented: $showSheet) {
+                    AddBudgetView()
+                }
+//                .onAppear{
+//                    context.insert(Budget.budgetSample)
+//                }
             }
         }
     }
