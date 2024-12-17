@@ -28,5 +28,6 @@ class Budget {
             ausgaben.remove(at: index)
         }
     }
+    
     static let budgetSample = Budget(name: "Freizeitpark", limit: 300.00)
 }

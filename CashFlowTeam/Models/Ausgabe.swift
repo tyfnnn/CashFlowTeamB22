@@ -1,5 +1,5 @@
 //
-//  Ausgaben.swift
+//  Ausgabe.swift
 //  CashFlowTeam
 //
 //  Created by Dilara Öztas on 16.12.24.
@@ -15,7 +15,6 @@ class Ausgabe {
     var name: String
     var date: Date
 
-    
     
     init(amount: Double, budget: Budget, name: String, date: Date) {
         self.amount = amount

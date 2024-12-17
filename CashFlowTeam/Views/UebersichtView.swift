@@ -19,19 +19,41 @@ struct UebersichtView: View {
         budgets.reduce(0) { $0 + $1.limit }
     }
     
+    var totalExpenses: Double {
+        budgets.reduce(0) { $0 + $1.totalExpenses }
+    }
+    
+    var availableBudget: Double {
+        totalLimit - totalExpenses
+    }
+    
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Gesamtbudget:")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .padding()
+                    Spacer()
                     Text("\(totalLimit, specifier: "%.2f") €")
                         .foregroundStyle(.green)
                         .font(.title2)
                         .fontWeight(.semibold)
                         .padding()
+                }
+                HStack {
+                    Text("Verfügbar:")
+                        .font(.title2)
+                        .fontWeight(.medium)
+                        .padding()
+                    Spacer()
+                    Text("\(availableBudget, specifier: "%.2f") €")
+                        .foregroundStyle(.green)
+                        .font(.title2)
+                        .fontWeight(.medium)
+                        .padding()
+                    
                 }
                 List(budgets) { budget in
                     NavigationLink(destination: DetailView(budget: budget)) {
@@ -54,7 +76,6 @@ struct UebersichtView: View {
                         }
                     }
                 }
-                
                 .navigationTitle("Budgets")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
