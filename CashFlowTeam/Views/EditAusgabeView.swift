@@ -1,36 +1,36 @@
 //
-//  AddAusgabeView.swift
+//  EditAusgabeView.swift
 //  CashFlowTeam
 //
-//  Created by Dilara Öztas on 16.12.24.
+//  Created by Tayfun Ilker on 17.12.24.
 //
 
 import SwiftUI
 import SwiftData
 
-struct AddAusgabeView: View {
-    let budget: Budget
-    @Environment(\.modelContext) private var modelContext
+struct EditAusgabeView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var name: String = ""
     @State private var amount: String = ""
-   
+    @Binding var ausgabe: Ausgabe 
     
     var body: some View {
+        Text("hallo")
         NavigationStack {
             Form {
-                Section("Ausgaben Informationen") {
+                Section("Informationen") {
                     TextField("Name", text: $name)
                     TextField("Kosten (€)", text: $amount)
+                        .keyboardType(.decimalPad)
                 }
             }
-            .navigationTitle("Neue Ausgabe")
+            .navigationTitle("Ausgabe bearbeiten")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
-                        saveAusgabe()
-                        dismiss()
+//                        saveAusgabe()
+//                        dismiss()
                     }
                 }
             
@@ -45,12 +45,14 @@ struct AddAusgabeView: View {
     
     private func saveAusgabe() {
         guard let amountValue = Double(amount) else { return }
-        let neueAusgabe = Ausgabe(amount: amountValue, budget: budget, name: name, date: Date())
-            modelContext.insert(neueAusgabe)
-            budget.ausgaben.append(neueAusgabe)
+        ausgabe.name = name
+        ausgabe.amount = amountValue
+        ausgabe.date = Date()
+    
         }
 }
 
 #Preview {
-    AddAusgabeView(budget: Budget(name: "Lebensmittel", limit: 300))
+    EditAusgabeView(budget: Budget(name: "Lebensmittel", limit: 300), ausgabe: Ausgabe(amount: 50, budget: Budget.budgetSample, name: "Europapark", date: .now), ausgabe1: .constant(Ausgabe(amount: 0.0, budget: Budget.budgetSample, name: "test", date: .now)))
 }
+

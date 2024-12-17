@@ -26,4 +26,5 @@ struct NavigationView: View {
 
 #Preview {
     NavigationView()
+        .modelContainer(for: Budget.self, inMemory: false)
 }

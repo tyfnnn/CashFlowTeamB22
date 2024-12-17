@@ -59,6 +59,9 @@ struct UebersichtView: View {
             .sheet(isPresented: $showSheet) {
                 AddBudgetView()
             }
+            .onAppear{
+                context.insert(Budget.budgetSample)
+            }
         }
     }
 }

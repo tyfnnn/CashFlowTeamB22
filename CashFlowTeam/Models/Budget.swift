@@ -16,11 +16,12 @@ class Budget {
         ausgaben.reduce(0) { $0 + $1.amount }
     }
     
-    @Relationship(inverse: \Ausgabe.budget) var ausgaben: [Ausgabe]
+    @Relationship(deleteRule: .cascade) var ausgaben: [Ausgabe] = []
 
     init(name: String, limit: Double) {
         self.name = name
         self.limit = limit
-        self.ausgaben = []
     }
+    
+    static let budgetSample = Budget(name: "Freizeitpark", limit: 300.00)
 }
