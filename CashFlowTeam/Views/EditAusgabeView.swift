@@ -12,16 +12,22 @@ struct EditAusgabeView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var name: String = ""
-    @State private var amount: String = ""
-    @Binding var ausgabe: Ausgabe 
+    @State private var amount: Double = 0
+    @Bindable var ausgabe: Ausgabe
+    
+    init(ausgabe: Ausgabe) {
+        self.ausgabe = ausgabe
+        _name = State(initialValue: ausgabe.name)
+        _amount = State(initialValue: Double(ausgabe.amount))
+    }
     
     var body: some View {
-        Text("hallo")
         NavigationStack {
             Form {
                 Section("Informationen") {
                     TextField("Name", text: $name)
-                    TextField("Kosten (€)", text: $amount)
+                    // Währungsformatierung in Eur als Double
+                    TextField("Kosten (€)", value: $amount, format: .currency(code: "EUR"))
                         .keyboardType(.decimalPad)
                 }
             }
@@ -29,8 +35,8 @@ struct EditAusgabeView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
-//                        saveAusgabe()
-//                        dismiss()
+                        saveAusgabe()
+                        dismiss()
                     }
                 }
             
@@ -44,15 +50,14 @@ struct EditAusgabeView: View {
     }
     
     private func saveAusgabe() {
-        guard let amountValue = Double(amount) else { return }
         ausgabe.name = name
-        ausgabe.amount = amountValue
+        ausgabe.amount = amount
         ausgabe.date = Date()
     
         }
 }
 
 #Preview {
-    EditAusgabeView(budget: Budget(name: "Lebensmittel", limit: 300), ausgabe: Ausgabe(amount: 50, budget: Budget.budgetSample, name: "Europapark", date: .now), ausgabe1: .constant(Ausgabe(amount: 0.0, budget: Budget.budgetSample, name: "test", date: .now)))
+    EditAusgabeView(ausgabe: Ausgabe.sample)
+        .modelContainer(for: Budget.self, inMemory: true)
 }
-

@@ -12,7 +12,7 @@ struct DetailView: View {
     let budget: Budget
     @Environment(\.modelContext) private var context
     @State private var showAddAusgabeSheet = false
-//    @Query(sort: \Ausgabe.name) var ausgabeListe: [Ausgabe]
+
     @State var showEditSheet = false
     @State var ausgabe1: Ausgabe = Ausgabe(amount: 0.00, budget: Budget.budgetSample, name: "", date: .now)
     
@@ -25,7 +25,7 @@ struct DetailView: View {
                         Text("Keine Einträge vorhanden")
                     } else {
                         ForEach(budget.ausgaben) { ausgabe in
-                            NavigationLink(destination: EditAusgabeView()) {
+                            NavigationLink(destination: EditAusgabeView(ausgabe: ausgabe)) {
                                 HStack {
                                     Text(ausgabe.name)
                                     Spacer()
