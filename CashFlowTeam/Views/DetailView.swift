@@ -14,7 +14,6 @@ struct DetailView: View {
     @State private var showAddAusgabeSheet = false
 
     @State var showEditSheet = false
-    @State var ausgabe1: Ausgabe = Ausgabe(amount: 0.00, budget: Budget.budgetSample, name: "", date: .now)
     
     
     var body: some View {
@@ -32,11 +31,7 @@ struct DetailView: View {
                             }
                         }
                     }
-                    .swipeActions {
-                        Button("Delete", role: .destructive) {
-                            context.delete(budget)
-                        }
-                    }
+                    .onDelete(perform: deleteAusgabe)
                     
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
@@ -57,13 +52,21 @@ struct DetailView: View {
                         .shadow(radius: 5)
                 }
             }
-//            .onAppear{
-//                context.insert(Ausgabe.sample)
-//            }
+            .onAppear{
+                context.insert(Ausgabe.sample)
+            }
         }
         .navigationTitle(budget.name)
         .sheet(isPresented: $showAddAusgabeSheet) {
             AddAusgabeView(budget: budget)
+        }
+    }
+    
+    private func deleteAusgabe(at offsets: IndexSet) {
+        for index in offsets {
+            let ausgabe = budget.ausgaben[index]
+            budget.deleteAusgabe(ausgabe)
+            context.delete(ausgabe)
         }
     }
 }

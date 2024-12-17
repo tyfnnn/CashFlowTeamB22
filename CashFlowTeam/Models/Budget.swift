@@ -23,5 +23,10 @@ class Budget {
         self.limit = limit
     }
     
+    func deleteAusgabe(_ ausgabe: Ausgabe) {
+        if let index = ausgaben.firstIndex(where: { $0.id == ausgabe.id }) {
+            ausgaben.remove(at: index)
+        }
+    }
     static let budgetSample = Budget(name: "Freizeitpark", limit: 300.00)
 }

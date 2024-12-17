@@ -53,6 +53,7 @@ struct AddAusgabeView: View {
             }
         }
     }
+    
     private func saveAusgabe() {
         guard let amountValue = Double(amount) else { return }
         let neueAusgabe = Ausgabe(amount: amountValue, budget: budget, name: name, date: Date())

@@ -14,6 +14,7 @@ struct UebersichtView: View {
     
     @State private var showSheet = false
     
+    
     var totalLimit: Double {
         budgets.reduce(0) { $0 + $1.limit }
     }
@@ -65,9 +66,9 @@ struct UebersichtView: View {
                 .sheet(isPresented: $showSheet) {
                     AddBudgetView()
                 }
-//                .onAppear{
-//                    context.insert(Budget.budgetSample)
-//                }
+                .onAppear{
+                    context.insert(Budget.budgetSample)
+                }
             }
         }
     }
