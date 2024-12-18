@@ -11,12 +11,11 @@ import SwiftData
 struct UebersichtView: View {
     @Environment(\.modelContext) private var context
     @Query private var budgets: [Budget]
-    
+    @Binding var einnahmen: [Double]
     @State private var showSheet = false
-    @State private var balance:Double = 2000
    
-    var totalBalance: Double {
-        balance - totalExpenses
+    var totalEinnahmen: Double {
+        einnahmen.reduce(0, +)
     }
     
     var totalLimit: Double {
@@ -40,7 +39,7 @@ struct UebersichtView: View {
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
-                    Text("\(totalBalance, specifier: "%.2f") €")
+                    Text("\(totalEinnahmen, specifier: "%.2f") €")
                         .foregroundStyle(.green)
                         .font(.title2)
                         .fontWeight(.semibold)
@@ -111,8 +110,8 @@ struct UebersichtView: View {
     }
 }
 
-#Preview {
-    UebersichtView()
-        .modelContainer(for: Budget.self, inMemory: true)
-}
+//#Preview {
+//    UebersichtView(einnahmen: $einnahmen)
+//        .modelContainer(for: Budget.self, inMemory: true)
+//}
 

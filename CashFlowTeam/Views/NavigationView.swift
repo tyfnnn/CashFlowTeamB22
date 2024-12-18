@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct NavigationView: View {
+    @State private var einnahmen: [Double] = []
+
     var body: some View {
         TabView {
             Tab {
-                UebersichtView()
+                UebersichtView(einnahmen: $einnahmen)
             } label: {
                 Label ("Home", systemImage: "house")
             }
             Tab {
-                EinkommenView(gehalt: 0.0)
+                AddEinnahmenView(einnahmen: $einnahmen)
             } label: {
                 Label ("Einkommen", systemImage: "eurosign")
             }
