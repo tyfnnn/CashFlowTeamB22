@@ -13,7 +13,12 @@ struct NavigationView: View {
             Tab {
                 UebersichtView()
             } label: {
-                Label ("Budget", systemImage: "eurosign")
+                Label ("Home", systemImage: "house")
+            }
+            Tab {
+                EinkommenView(gehalt: 0.0)
+            } label: {
+                Label ("Einkommen", systemImage: "eurosign")
             }
             Tab {
                 AlleAusgabenView()

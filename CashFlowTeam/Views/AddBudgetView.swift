@@ -14,6 +14,7 @@ struct AddBudgetView: View {
     
     @State private var name: String = ""
     @State private var limitText: String = ""
+    @State private var showingAlert = false
     
     var body: some View {
         NavigationStack {
@@ -32,6 +33,8 @@ struct AddBudgetView: View {
                             let newBudget = Budget(name: name, limit: limit)
                             modelContext.insert(newBudget)
                             dismiss()
+                        } else {
+                            showingAlert = true
                         }
                     }
                 }
@@ -40,6 +43,12 @@ struct AddBudgetView: View {
                         dismiss()
                     }
                 }
+            }
+            .alert("Ungültige Eingabe",
+                   isPresented: $showingAlert) {
+                Button("OK") { }
+            } message: {
+                Text("Bitte geben Sie einen gültigen Namen und/oder Betrag ein.")
             }
         }
     }

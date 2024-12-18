@@ -10,7 +10,7 @@ import SwiftData
 
 struct AlleAusgabenView: View {
     //    @Query private var budgets: [Budget]
-    @Query private var ausgaben: [Ausgabe]
+    @Query(sort:\Ausgabe.date,order:.reverse) var ausgaben: [Ausgabe]
     //    @State private var alleAusgaben:
     @Environment(\.modelContext) private var context
     
@@ -32,6 +32,7 @@ struct AlleAusgabenView: View {
                                     //            Text(ausgabe.date)
                                     
                                 }
+                                Text(ausgabe.date, style:.date)
                             }
                             .swipeActions {
                                 Button("Delete", role: .destructive) {
@@ -43,6 +44,7 @@ struct AlleAusgabenView: View {
                 }
             }
             .navigationTitle("Alle Ausgaben")
+            
         }
     }
 }

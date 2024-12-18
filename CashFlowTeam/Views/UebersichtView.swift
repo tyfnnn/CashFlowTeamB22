@@ -13,7 +13,11 @@ struct UebersichtView: View {
     @Query private var budgets: [Budget]
     
     @State private var showSheet = false
-    
+    @State private var balance:Double = 2000
+   
+    var totalBalance: Double {
+        balance - totalExpenses
+    }
     
     var totalLimit: Double {
         budgets.reduce(0) { $0 + $1.limit }
@@ -30,6 +34,18 @@ struct UebersichtView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Guthaben")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding()
+                    Spacer()
+                    Text("\(totalBalance, specifier: "%.2f") €")
+                        .foregroundStyle(.green)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding()
+                }
                 HStack {
                     Text("Gesamtbudget:")
                         .font(.title2)
