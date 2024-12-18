@@ -59,6 +59,7 @@ struct AddAusgabeView: View {
         let neueAusgabe = Ausgabe(amount: amountValue, budget: budget, name: name, date: Date())
         modelContext.insert(neueAusgabe)
         budget.ausgaben.append(neueAusgabe)
+        try? modelContext.save()  // Explizites Speichern
     }
 }
 

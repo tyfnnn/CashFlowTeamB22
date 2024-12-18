@@ -13,7 +13,6 @@ struct UebersichtView: View {
     @Query private var budgets: [Budget]
     @Binding var einnahmen: [Double]
     @State private var showSheet = false
-    let budget: Budget
    
     var totalEinnahmen: Double {
         einnahmen.reduce(0, +)
@@ -87,8 +86,10 @@ struct UebersichtView: View {
                         }
                     }
                     .swipeActions {
-                        Button("Delete", role: .destructive) {
-                            context.delete(budget)
+                        Button(role: .destructive) {
+                            deleteBudget(budget)
+                        } label: {
+                            Label("Löschen", systemImage: "trash")
                         }
                     }
                 }
@@ -107,12 +108,17 @@ struct UebersichtView: View {
         }
     }
     
-    private func deleteBudget(at offsets: IndexSet) {
-        for index in offsets {
-            let ausgabe = budget
-            budget.deleteBudget(budget)
-            context.delete(budget)
+    private func deleteBudget(_ budget: Budget) {
+        // Erst alle Ausgaben löschen
+        for ausgabe in budget.ausgaben {
+            context.delete(ausgabe)
         }
+        
+        // Dann das Budget selbst löschen
+        context.delete(budget)
+        
+        // Optional: Änderungen sofort speichern
+        try? context.save()
     }
 }
 

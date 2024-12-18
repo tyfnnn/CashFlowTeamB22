@@ -32,6 +32,7 @@ struct AddBudgetView: View {
                            !name.isEmpty {
                             let newBudget = Budget(name: name, limit: limit)
                             modelContext.insert(newBudget)
+                            try? modelContext.save()  // Explizites Speichern
                             dismiss()
                         } else {
                             showingAlert = true

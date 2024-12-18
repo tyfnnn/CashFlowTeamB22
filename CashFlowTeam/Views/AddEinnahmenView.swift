@@ -11,6 +11,8 @@ import SwiftData
 struct AddEinnahmenView: View {
     @Environment(\.modelContext) var context
     @Binding var einnahmen: [Double]
+    @Query var savedEinnahmen: [Einnahmen]  // Add this to query saved entries
+
     @State private var neueEinnahme: Double = 0
     @State private var titel: String = ""
     
@@ -24,11 +26,7 @@ struct AddEinnahmenView: View {
                     
                     Button("Speichern") {
                         if neueEinnahme > 0 {
-                            let neueEinnahmeObjekt = Einnahmen(titel: titel, einnahme: neueEinnahme)
-                            context.insert(neueEinnahmeObjekt)
-                            einnahmen.append(neueEinnahme)
                             saveEinnahmen()
-                            neueEinnahme = 0
                         }
                     }
                     .disabled(neueEinnahme <= 0 || titel.isEmpty)
@@ -38,6 +36,7 @@ struct AddEinnahmenView: View {
                     ForEach(einnahmen.indices, id: \.self) { index in
                         Text("Einnahme \(index + 1): \(einnahmen[index], specifier: "%.2f") €")
                     }
+                    .onDelete(perform: deleteEinnahmen)
                 }
             }
             .navigationTitle("Einnahmen")
@@ -45,7 +44,25 @@ struct AddEinnahmenView: View {
     }
     
     private func saveEinnahmen() {
+        guard neueEinnahme > 0 else { return }
+        let neueEinnahmeObjekt = Einnahmen(titel: titel, einnahme: neueEinnahme)
+        context.insert(neueEinnahmeObjekt)
+        einnahmen.append(neueEinnahme)
+        try? context.save()  // Explizites Speichern
         
+        // Reset input fields
+        titel = ""
+        neueEinnahme = 0
+    }
+    
+    private func deleteEinnahmen(at offsets: IndexSet) {
+        for index in offsets {
+            let einnahme = savedEinnahmen[index]
+            context.delete(einnahme)
+            if let arrayIndex = einnahmen.firstIndex(of: einnahme.einnahme) {
+                einnahmen.remove(at: arrayIndex)
+            }
+        }
     }
 }
 
