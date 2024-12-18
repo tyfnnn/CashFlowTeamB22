@@ -11,9 +11,11 @@ import SwiftData
 
 @Model
 class Einnahmen {
+    var titel: String
     var einnahme: Double
     
-    init(einnahme: Double) {
+    init(titel: String, einnahme: Double) {
         self.einnahme = einnahme
+        self.titel = titel
     }
 }

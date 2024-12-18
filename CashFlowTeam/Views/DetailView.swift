@@ -37,8 +37,7 @@ struct DetailView: View {
                     .padding(.horizontal)
                 }
             }
-            Spacer()
-            .overlay{
+            .overlay(alignment: .topTrailing) {
                 Button {
                     showAddAusgabeSheet = true
                 } label: {
@@ -52,9 +51,8 @@ struct DetailView: View {
                         .shadow(radius: 5)
                 }
             }
-            .onAppear{
-                context.insert(Ausgabe.sample)
-            }
+            Spacer()
+
         }
         .navigationTitle(budget.name)
         .sheet(isPresented: $showAddAusgabeSheet) {

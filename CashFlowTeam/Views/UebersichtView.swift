@@ -13,6 +13,7 @@ struct UebersichtView: View {
     @Query private var budgets: [Budget]
     @Binding var einnahmen: [Double]
     @State private var showSheet = false
+    let budget: Budget
    
     var totalEinnahmen: Double {
         einnahmen.reduce(0, +)
@@ -102,10 +103,15 @@ struct UebersichtView: View {
                 .sheet(isPresented: $showSheet) {
                     AddBudgetView()
                 }
-                .onAppear{
-                    context.insert(Budget.budgetSample)
-                }
             }
+        }
+    }
+    
+    private func deleteBudget(at offsets: IndexSet) {
+        for index in offsets {
+            let ausgabe = budget
+            budget.deleteBudget(budget)
+            context.delete(budget)
         }
     }
 }

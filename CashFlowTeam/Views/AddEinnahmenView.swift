@@ -9,24 +9,29 @@ import SwiftUI
 import SwiftData
 
 struct AddEinnahmenView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) var context
     @Binding var einnahmen: [Double]
-    @State private var neueEinnahme: String = ""
+    @State private var neueEinnahme: Double = 0
+    @State private var titel: String = ""
     
     var body: some View {
         NavigationStack {
             Form {
                 Section(header: Text("Neue Einnahme hinzufügen")) {
-                    TextField("Betrag", text: $neueEinnahme)
+                    TextField("Titel", text: $titel)
+                    TextField("Betrag", value: $neueEinnahme, format: .currency(code: "EUR"))
                         .keyboardType(.decimalPad)
                     
                     Button("Speichern") {
-                        if let betrag = Double(neueEinnahme), betrag > 0 {
-                            einnahmen.append(betrag)
-                            neueEinnahme = ""
+                        if neueEinnahme > 0 {
+                            let neueEinnahmeObjekt = Einnahmen(titel: titel, einnahme: neueEinnahme)
+                            context.insert(neueEinnahmeObjekt)
+                            einnahmen.append(neueEinnahme)
+                            saveEinnahmen()
+                            neueEinnahme = 0
                         }
                     }
-                    .disabled(neueEinnahme.isEmpty)
+                    .disabled(neueEinnahme <= 0 || titel.isEmpty)
                 }
                 
                 Section(header: Text("Gespeicherte Einnahmen")) {
@@ -39,6 +44,9 @@ struct AddEinnahmenView: View {
         }
     }
     
+    private func saveEinnahmen() {
+        
+    }
 }
 
 #Preview {

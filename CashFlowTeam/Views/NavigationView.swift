@@ -20,7 +20,7 @@ struct NavigationView: View {
             Tab {
                 AddEinnahmenView(einnahmen: $einnahmen)
             } label: {
-                Label ("Einkommen", systemImage: "eurosign")
+                Label ("Einnahmen", systemImage: "eurosign")
             }
             Tab {
                 AlleAusgabenView()
