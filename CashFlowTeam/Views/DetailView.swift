@@ -13,7 +13,7 @@ struct DetailView: View {
     @Environment(\.modelContext) private var context
     @State private var showAddAusgabeSheet = false
 
-    @State var showEditSheet = false
+ 
     
     
     var body: some View {

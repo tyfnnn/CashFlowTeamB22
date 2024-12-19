@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct NavigationView: View {
-    @State private var einnahmen: [Double] = []
+   // @State private var einnahmen: [Double] = []
 
     var body: some View {
         TabView {
             Tab {
-                UebersichtView(einnahmen: $einnahmen)
+                UebersichtView()
             } label: {
                 Label ("Home", systemImage: "house")
             }
             Tab {
-                AddEinnahmenView(einnahmen: $einnahmen)
+                AddEinnahmenView()
             } label: {
                 Label ("Einnahmen", systemImage: "eurosign")
             }
@@ -33,6 +33,6 @@ struct NavigationView: View {
 
 #Preview {
     NavigationView()
-        .modelContainer(for: Budget.self, inMemory: false)
+        .modelContainer(for: [Budget.self, Einnahmen.self], inMemory: false)
 //        .modelContainer(for: Einnahmen.self, inMemory: false)
 }

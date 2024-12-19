@@ -11,11 +11,11 @@ import SwiftData
 struct UebersichtView: View {
     @Environment(\.modelContext) private var context
     @Query private var budgets: [Budget]
-    @Binding var einnahmen: [Double]
+    @Query var einnahmen: [Einnahmen]
     @State private var showSheet = false
    
     var totalEinnahmen: Double {
-        einnahmen.reduce(0, +)
+        einnahmen.map(\.einnahme).reduce(0, +)
     }
     
     var totalLimit: Double {

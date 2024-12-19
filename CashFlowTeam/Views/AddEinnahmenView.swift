@@ -9,11 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct AddEinnahmenView: View {
-    @Environment(\.modelContext) var context
-    @Binding var einnahmen: [Double]
+    // let einnahmen:Einnahmen
+    @Environment(\.modelContext) var modelContext
+    //@Binding var einnahmen: [Double]
     @Query var savedEinnahmen: [Einnahmen]  // Add this to query saved entries
-
-    @State private var neueEinnahme: Double = 0
+    
+    @State private var neueEinnahme: String = ""
     @State private var titel: String = ""
     
     var body: some View {
@@ -21,54 +22,56 @@ struct AddEinnahmenView: View {
             Form {
                 Section(header: Text("Neue Einnahme hinzufügen")) {
                     TextField("Titel", text: $titel)
-                    TextField("Betrag", value: $neueEinnahme, format: .currency(code: "EUR"))
+                    TextField("Betrag (€)", text: $neueEinnahme)
                         .keyboardType(.decimalPad)
                     
                     Button("Speichern") {
-                        if neueEinnahme > 0 {
-                            saveEinnahmen()
+                        if !neueEinnahme.isEmpty && !titel.isEmpty {
+                            save()
                         }
                     }
-                    .disabled(neueEinnahme <= 0 || titel.isEmpty)
+                    .disabled(neueEinnahme.isEmpty && titel.isEmpty)
                 }
                 
-//                Section(header: Text("Gespeicherte Einnahmen")) {
-//                    ForEach(einnahmen.indices, id: \.self) { index in
-//                        Text(einnahme.titel)
-//                        Spacer()
-//                        Text("\(einnahme.einnahme, specifier: "%.2f") €")                    }
-//                    .onDelete(perform: deleteEinnahmen)
-//                }
+                //                Section(header: Text("Gespeicherte Einnahmen")) {
+                //                    ForEach(einnahmen.indices, id: \.self) { index in
+                //                        Text(einnahme.titel)
+                //                        Spacer()
+                //                        Text("\(einnahme.einnahme, specifier: "%.2f") €")                    }
+                //                    .onDelete(perform: deleteEinnahmen)
+                //                }
             }
             .navigationTitle("Einnahmen")
         }
     }
     
-    private func saveEinnahmen() {
-        guard neueEinnahme > 0 else { return }
+    private func save() {
+        guard let neueEinnahme = Double(neueEinnahme) else { return }
         let neueEinnahmeObjekt = Einnahmen(titel: titel, einnahme: neueEinnahme)
-        context.insert(neueEinnahmeObjekt)
-        einnahmen.append(neueEinnahme)
-        try? context.save()
+        modelContext.insert(neueEinnahmeObjekt)
+        //       einnahmen.append(neueEinnahme)
+        try? modelContext.save()
         
         titel = ""
-        neueEinnahme = 0
+        
     }
     
     private func deleteEinnahmen(at offsets: IndexSet) {
         for index in offsets {
             let einnahme = savedEinnahmen[index]
-            context.delete(einnahme)
-            if let arrayIndex = einnahmen.firstIndex(of: einnahme.einnahme) {
-                einnahmen.remove(at: arrayIndex)
-            }
+            modelContext.delete(einnahme)
+            //           if let arrayIndex = einnahmen.firstIndex(of: einnahme.einnahme) {
+            //              einnahmen.remove(at: arrayIndex)
+            //           }
         }
-        try? context.save()
+        try? modelContext.save()
     }
 }
 
 #Preview {
-    @State var testEinnahmen: [Double] = [100.0, 200.0]
-    AddEinnahmenView(einnahmen: $testEinnahmen)
-        .modelContainer(for: Einnahmen.self, inMemory: true)
+    var container = try! ModelContainer(for: Einnahmen.self,configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    container.mainContext.insert(Einnahmen(titel: "Wohnungen", einnahme: 800))
+    
+    return AddEinnahmenView()
+        .modelContainer(container)
 }
