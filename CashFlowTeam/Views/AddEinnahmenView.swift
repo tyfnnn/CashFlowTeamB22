@@ -32,12 +32,13 @@ struct AddEinnahmenView: View {
                     .disabled(neueEinnahme <= 0 || titel.isEmpty)
                 }
                 
-                Section(header: Text("Gespeicherte Einnahmen")) {
-                    ForEach(einnahmen.indices, id: \.self) { index in
-                        Text("Einnahme \(index + 1): \(einnahmen[index], specifier: "%.2f") €")
-                    }
-                    .onDelete(perform: deleteEinnahmen)
-                }
+//                Section(header: Text("Gespeicherte Einnahmen")) {
+//                    ForEach(einnahmen.indices, id: \.self) { index in
+//                        Text(einnahme.titel)
+//                        Spacer()
+//                        Text("\(einnahme.einnahme, specifier: "%.2f") €")                    }
+//                    .onDelete(perform: deleteEinnahmen)
+//                }
             }
             .navigationTitle("Einnahmen")
         }
@@ -48,9 +49,8 @@ struct AddEinnahmenView: View {
         let neueEinnahmeObjekt = Einnahmen(titel: titel, einnahme: neueEinnahme)
         context.insert(neueEinnahmeObjekt)
         einnahmen.append(neueEinnahme)
-        try? context.save()  // Explizites Speichern
+        try? context.save()
         
-        // Reset input fields
         titel = ""
         neueEinnahme = 0
     }
@@ -63,6 +63,7 @@ struct AddEinnahmenView: View {
                 einnahmen.remove(at: arrayIndex)
             }
         }
+        try? context.save()
     }
 }
 

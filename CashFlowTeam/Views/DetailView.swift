@@ -37,7 +37,7 @@ struct DetailView: View {
                     .padding(.horizontal)
                 }
             }
-            .overlay(alignment: .topTrailing) {
+            .overlay(alignment: .bottom) {
                 Button {
                     showAddAusgabeSheet = true
                 } label: {
@@ -50,6 +50,7 @@ struct DetailView: View {
                         .clipShape(Circle())
                         .shadow(radius: 5)
                 }
+                .padding(.bottom, 25)
             }
             Spacer()
 

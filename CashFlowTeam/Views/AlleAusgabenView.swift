@@ -53,3 +53,7 @@ struct AlleAusgabenView: View {
     AlleAusgabenView()
         .modelContainer(for: Ausgabe.self, inMemory: true)
 }
+
+/*
+ 
+ */

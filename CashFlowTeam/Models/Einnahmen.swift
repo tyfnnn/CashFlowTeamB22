@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Einnahmen {
+class Einnahmen: Identifiable {
     var titel: String
     var einnahme: Double
     
