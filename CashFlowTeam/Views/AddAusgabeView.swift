@@ -26,7 +26,9 @@ struct AddAusgabeView: View {
                     TextField("Kosten (€)", text: $amount)
                 }
             }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Neue Ausgabe")
+            .background(Color("backgroundColor"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {

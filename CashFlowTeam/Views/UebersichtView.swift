@@ -13,7 +13,7 @@ struct UebersichtView: View {
     @Query private var budgets: [Budget]
     @Query var einnahmen: [Einnahmen]
     @State private var showSheet = false
-   
+    
     var totalEinnahmen: Double {
         einnahmen.map(\.einnahme).reduce(0, +)
     }
@@ -32,80 +32,120 @@ struct UebersichtView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Guthaben")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding()
-                    Spacer()
-                    Text("\(totalEinnahmen, specifier: "%.2f") €")
-                        .foregroundStyle(.green)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding()
-                }
-                HStack {
-                    Text("Gesamtbudget:")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding()
-                    Spacer()
-                    Text("\(totalLimit, specifier: "%.2f") €")
-                        .foregroundStyle(.green)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding()
-                }
-                HStack {
-                    Text("Verfügbar:")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .padding()
-                    Spacer()
-                    Text("\(availableBudget, specifier: "%.2f") €")
-                        .foregroundStyle(.green)
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .padding()
-                    
-                }
-                List(budgets) { budget in
-                    NavigationLink(destination: DetailView(budget: budget)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            
-                            Text(budget.name)
-                                .font(.headline)
-                            
-                            HStack {
-                                Text("\(budget.limit, specifier: "%.2f") €")
-                                Spacer()
-                                Text("- \(budget.totalExpenses, specifier: "%.2f") €")
-                                    .foregroundColor(.red)
+            ZStack {
+                Color("backgroundColor")
+                    .ignoresSafeArea()
+                
+                Image("dagobertDuck")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 390)
+                    .opacity(0.5)
+                
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Guthaben")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .padding()
+                        Spacer()
+                        Text("\(totalEinnahmen, specifier: "%.2f") €")
+                            .foregroundStyle(.green)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .padding()
+                    }
+                    HStack {
+                        Text("Gesamtbudget:")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .padding()
+                        Spacer()
+                        Text("\(totalLimit, specifier: "%.2f") €")
+                            .foregroundStyle(.green)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .padding()
+                    }
+                    HStack {
+                        Text("Verfügbar:")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .padding()
+                        Spacer()
+                        Text("\(availableBudget, specifier: "%.2f") €")
+                            .foregroundStyle(.green)
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .padding()
+                        
+                    }
+                    List(budgets) { budget in
+                        NavigationLink(destination: DetailView(budget: budget)) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                
+                                Text(budget.name)
+                                    .font(.headline)
+                                
+                                HStack {
+                                    Text("\(budget.limit, specifier: "%.2f") €")
+                                        .fontWeight(.bold)
+                                    Spacer()
+                                    Text("- \(budget.totalExpenses, specifier: "%.2f") €")
+                                        .foregroundColor(.red)
+                                        .fontWeight(.bold)
+                                }
+                            }
+                        }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                deleteBudget(budget)
+                            } label: {
+                                Label("Löschen", systemImage: "trash")
+                            }
+                        }
+                        .listRowBackground(Color("backgroundColor").opacity(0.7))
+                        .scrollContentBackground(.hidden)
+                    }
+                    .navigationTitle("Budgets")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: { showSheet = true }) {
+                                Image(systemName: "plus")
                             }
                         }
                     }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            deleteBudget(budget)
-                        } label: {
-                            Label("Löschen", systemImage: "trash")
+                    .overlay(content: {
+                        if budgets.isEmpty {
+                            ContentUnavailableView(label: {
+                                Label {
+                                    Text("Keine Einträge vorhanden")
+                                } icon: {
+                                    Button {
+                                    } label: {
+                                        Image(systemName: "document")
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }, description: {
+                                Text("Fange an Einträge hinzuzufügen")
+                            }, actions: {
+                                Button {
+                                    showSheet = true
+                                } label: {
+                                    Text("Füge Budgets hinzu")
+                                }
+                            })
                         }
+                    })
+                    .sheet(isPresented: $showSheet) {
+                        AddBudgetView()
                     }
-                }
-                .navigationTitle("Budgets")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: { showSheet = true }) {
-                            Image(systemName: "plus")
-                        }
-                    }
-                }
-                .sheet(isPresented: $showSheet) {
-                    AddBudgetView()
                 }
             }
         }
+        
     }
     
     private func deleteBudget(_ budget: Budget) {

@@ -17,32 +17,45 @@ struct AlleAusgabenView: View {
     var body: some View {
         NavigationStack {
             List {
-                VStack {
-                    if ausgaben.isEmpty {
-                        Text("Keine Einträge vorhanden!")
-                    } else {
-                        ForEach(ausgaben) { ausgabe in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(ausgabe.budget.name)
-                                    .bold()
-                                HStack {
-                                    Text(ausgabe.name)
-                                    Spacer()
-                                    Text("\(ausgabe.amount, specifier: "%.2f") €")
-                                    //            Text(ausgabe.date)
-                                    
-                                }
-                                Text(ausgabe.date, style:.date)
+                if !ausgaben.isEmpty {  // Prüfung hinzugefügt
+                    ForEach(ausgaben) { ausgabe in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(ausgabe.budget.name)
+                                .bold()
+                            HStack {
+                                Text(ausgabe.name)
+                                Spacer()
+                                Text("\(ausgabe.amount, specifier: "%.2f") €")
                             }
-                            .swipeActions {
-                                Button("Delete", role: .destructive) {
-                                    context.delete(ausgabe)
-                                }
+                            Text(ausgabe.date, style:.date)
+                        }
+                        .swipeActions {
+                            Button("Delete", role: .destructive) {
+                                context.delete(ausgabe)
                             }
                         }
                     }
                 }
             }
+            .overlay(content: {
+                if ausgaben.isEmpty {
+                    ContentUnavailableView(label: {
+                        Label {
+                            Text("Keine Einträge vorhanden")
+                        } icon: {
+                            Button {
+                            } label: {
+                                Image(systemName: "document")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }, description: {
+                        Text("Fange an Einträge hinzuzufügen")
+                    })
+                }
+            })
+            .scrollContentBackground(.hidden)
+            .background(Color("backgroundColor"))
             .navigationTitle("Alle Ausgaben")
             
         }

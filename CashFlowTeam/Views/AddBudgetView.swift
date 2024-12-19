@@ -24,6 +24,7 @@ struct AddBudgetView: View {
                     TextField("Geplantes Budget (€)", text: $limitText)
                 }
             }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Neues Budget")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -52,7 +53,10 @@ struct AddBudgetView: View {
                 Text("Bitte geben Sie einen gültigen Namen und/oder Betrag ein.")
             }
         }
+        .background(Color("backgroundColor"))
+        .scrollContentBackground(.hidden)
     }
+    
 }
 
 #Preview {

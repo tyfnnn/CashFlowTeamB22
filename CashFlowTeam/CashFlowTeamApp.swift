@@ -13,7 +13,7 @@ struct CashFlowTeamApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView()
-                .modelContainer(for: Budget.self)
+                .modelContainer(for: [Budget.self, Einnahmen.self])
         }
     }
 }

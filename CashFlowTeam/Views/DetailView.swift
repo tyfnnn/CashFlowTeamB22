@@ -17,44 +17,71 @@ struct DetailView: View {
     
     
     var body: some View {
-        NavigationStack {
-            List {
-                if budget.ausgaben.isEmpty {
-                    Text("Keine Einträge vorhanden")
-                } else {
-                    ForEach(budget.ausgaben) { ausgabe in
-                        NavigationLink(destination: EditAusgabeView(ausgabe: ausgabe)) {
-                            HStack {
-                                Text(ausgabe.name)
-                                Spacer()
-                                Text("\(ausgabe.amount, specifier: "%.2f") €")
+        ZStack {
+            Color("backgroundColor")
+                .ignoresSafeArea()
+            
+            NavigationStack {
+                List {
+                    if budget.ausgaben.isEmpty {
+                    } else {
+                        ForEach(budget.ausgaben) { ausgabe in
+                            NavigationLink(destination: EditAusgabeView(ausgabe: ausgabe)) {
+                                HStack {
+                                    Text(ausgabe.name)
+                                    Spacer()
+                                    Text("\(ausgabe.amount, specifier: "%.2f") €")
+                                }
                             }
                         }
+                        .onDelete(perform: deleteAusgabe)
+                        .listRowBackground(Color("backgroundColor").opacity(0.5))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
                     }
-                    .onDelete(perform: deleteAusgabe)
-                    
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
                 }
-            }
-            .overlay(alignment: .bottom) {
-                Button {
-                    showAddAusgabeSheet = true
-                } label: {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(Circle())
-                        .shadow(radius: 5)
+                .overlay(alignment: .bottom) {
+                    Button {
+                        showAddAusgabeSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundStyle(.white)
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    .padding(.bottom, 25)
                 }
-                .padding(.bottom, 25)
-            }
-            Spacer()
+                Spacer()
 
+            }
         }
+        .overlay(content: {
+            if budget.ausgaben.isEmpty {
+                ContentUnavailableView(label: {
+                    Label {
+                        Text("Keine Einträge vorhanden")
+                    } icon: {
+                        Button {
+                        } label: {
+                            Image(systemName: "document")
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }, description: {
+                    Text("Fange an Einträge hinzuzufügen")
+                }, actions: {
+                    Button {
+                        showAddAusgabeSheet = true
+                    } label: {
+                        Text("Füge Jobs hinzu")
+                    }
+                })
+            }
+        })
         .navigationTitle(budget.name)
         .sheet(isPresented: $showAddAusgabeSheet) {
             AddAusgabeView(budget: budget)
